@@ -1,0 +1,53 @@
+{% set name = "pandera-report" %}
+{% set version = "0.1.2" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/pandera_report-{{ version }}.tar.gz
+  sha256: b2ad0dff6155702ca4deac57878851debdd17c26a8085f7cd16f35263cb287bf
+
+build:
+  skip: True  # [py<39 or py>312]
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
+
+requirements:
+  host:
+    - python
+    - poetry-core
+    - pip
+  run:
+    - python
+    - pandas >=2.2.3,<3.0.0
+    - pandera >=0.20.4,<0.21.0
+    - numpy >=1.26.4,<2.0.0
+
+test:
+  imports:
+    - pandera_report
+  commands:
+    - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+  requires:
+    - pip
+
+about:
+  home: https://github.com/Luanee/pandera-report/
+  summary: Pandera Report for row-based reporting by using the power of pandera.
+  dev_url: https://github.com/Luanee/pandera-report/
+  doc_url: https://github.com/Luanee/pandera-report/blob/main/README.md
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE.md
+  description: |
+    If you have to report potential quality issues resulting from the dataframe validation via pandera,
+    than pandera-report is your friend.
+    Based on the information of possible validation issues that pandera provides,
+    your original dataframe will be extended with these issues on a row-level base.
+
+extra:
+  recipe-maintainers:
+    - Cansisti
